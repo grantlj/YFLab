@@ -22,7 +22,7 @@ public class HumidityDAO {
 		try {
 			connection=db.getConnection();
 			statement = connection.createStatement();
-			String sql = "select * from "+tableName+" ORDER BY date DESC limit 1,1";
+			String sql = "select * from "+tableName+" ORDER BY id DESC limit 1,1";
 			
 			ResultSet rs;
 			rs=statement.executeQuery(sql);
