@@ -1,15 +1,15 @@
 package com.yflab.model;
 
-public class AllData {
+public class MyEnvironment {
 	
 	private Temperature temperature;
 	private Humidity humidity;
 
-	public AllData() {
+	public MyEnvironment() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AllData(Temperature temperature, Humidity huminity) {
+	public MyEnvironment(Temperature temperature, Humidity huminity) {
 		super();
 		this.temperature = temperature;
 		this.humidity = huminity;

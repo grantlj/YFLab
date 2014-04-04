@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.yflab.model.AllData;
+import com.yflab.model.MyEnvironment;
 import com.yflab.model.Humidity;
 import com.yflab.model.Temperature;
-import com.yflab.util.AllDataDAO;
+import com.yflab.util.MyEnvironmentDAO;
 import com.yflab.util.HumidityDAO;
 import com.yflab.util.OperateListDAO;
 import com.yflab.util.TemperatureDAO;
@@ -107,12 +107,12 @@ public class GetData extends HttpServlet {
 	    		ret=getJsonStr(temperature);
 	    }
 	    
-	    if (reqType.equals("latestAllData"))
+	    if (reqType.equals("myEnvironment"))
 	    {
-	    	AllData allData=null;
+	    	MyEnvironment myEnvironment=null;
 	    	try
 	    	{
-	    		allData=AllDataDAO.GetLatestAllData();
+	    		myEnvironment=MyEnvironmentDAO.GetLatestAllData();
 	    	}
 	    	
 	    	catch (SQLException e)
@@ -120,8 +120,8 @@ public class GetData extends HttpServlet {
 	    		e.printStackTrace();
 	    	}
 	    	
-	    	if (allData!=null)
-	    	  ret=getJsonStr(allData);
+	    	if (myEnvironment!=null)
+	    	  ret=getJsonStr(myEnvironment);
 	    	
 	    }
 	    
