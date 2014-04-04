@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.yflab.model.AllData;
 import com.yflab.model.Humidity;
 import com.yflab.model.Temperature;
+import com.yflab.util.AllDataDAO;
 import com.yflab.util.HumidityDAO;
 import com.yflab.util.OperateListDAO;
 import com.yflab.util.TemperatureDAO;
@@ -18,6 +20,11 @@ import com.yflab.util.TemperatureDAO;
 import com.alibaba.fastjson.*;
 
 public class GetData extends HttpServlet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor of the object.
@@ -82,7 +89,6 @@ public class GetData extends HttpServlet {
 			
 			if (humidity!=null) 
 				ret=getJsonStr(humidity);
-				
 		}
 		
 	    if (reqType.equals("latestTemperature"))
@@ -99,6 +105,24 @@ public class GetData extends HttpServlet {
 	    	
 	    	if (temperature!=null)
 	    		ret=getJsonStr(temperature);
+	    }
+	    
+	    if (reqType.equals("latestAllData"))
+	    {
+	    	AllData allData=null;
+	    	try
+	    	{
+	    		allData=AllDataDAO.GetLatestAllData();
+	    	}
+	    	
+	    	catch (SQLException e)
+	    	{
+	    		e.printStackTrace();
+	    	}
+	    	
+	    	if (allData!=null)
+	    	  ret=getJsonStr(allData);
+	    	
 	    }
 	    
 	if (ret!=null)

@@ -14,10 +14,6 @@ public class DbConnector {
 
 	private Connection connection = null;
 
-	/*private DbConnector() {
-
-	}*/
-
 	private void createConnection() throws SQLException,
 			InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
