@@ -3,6 +3,7 @@ package com.yflab.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ import com.yflab.util.TemperatureDAO;
 import com.alibaba.fastjson.*;
 
 public class GetData extends HttpServlet {
-
+    
 	/**
 	 * 
 	 */
@@ -68,14 +69,18 @@ public class GetData extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		String reqType=null;
+		
+		@SuppressWarnings("deprecation")
+		String path=request.getRealPath("index.jsp");
+	    path=path.substring(0,path.lastIndexOf('\\'))+"\\view\\images\\generated"; 
+        
+	    String reqType=null;
 		reqType=(String) request.getParameter("reqType");
 		String ret=null;
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter pw = response.getWriter();
 		
-		addViewLog(getRemoteAddress(request),"query");
+		addViewLog(getRemoteAddress(request),"query"+"_"+reqType);
 		
 		if (reqType.equals("latestHumidity"))
 		{
@@ -123,6 +128,66 @@ public class GetData extends HttpServlet {
 	    	if (myEnvironment!=null)
 	    	  ret=getJsonStr(myEnvironment);
 	    	
+	    }
+	    
+	    if (reqType.equals("tempList"))
+	    {
+	    	  int count=-1;
+	    	  try
+	    	  {
+	    	    count=Integer.parseInt((String)request.getParameter("count"));
+	    	    ArrayList<Temperature> tempArr=TemperatureDAO.getTemperatureList(count);
+	    	    ret=getJsonStr(tempArr);
+	    	  }
+	    	    catch (Exception e)
+	    	  {
+	    		  e.printStackTrace();
+	    	  }
+	    }
+	    
+	    if (reqType.equals("humidList"))
+	    {
+	    	  int count=-1;
+	    	  try
+	    	  {
+	    	    count=Integer.parseInt((String)request.getParameter("count"));
+	    	    ArrayList<Humidity> humidArr=HumidityDAO.getHumidityList(count);
+	    	  
+	    	    ret=getJsonStr(humidArr);
+	    	  }
+	    	    catch (Exception e)
+	    	  {
+	    		    
+	    	    	e.printStackTrace();
+	    	  }
+	    }
+	    
+	    if (reqType.equals("tempChart"))
+	    {
+	    	int count=-1;
+	    	try
+	    	{
+	    		count=Integer.parseInt((String) request.getParameter("count"));
+	    		ret=TemperatureDAO.generateTemperatureChart(count, path);
+	    	}
+	    	catch (Exception e)
+	    	{
+	    		e.printStackTrace();
+	    	}
+	    }
+	    
+	    if (reqType.equals("humidChart"))
+	    {
+	    	int count=-1;
+	    	try
+	    	{
+	    		count=Integer.parseInt((String) request.getParameter("count"));
+	    		ret=HumidityDAO.generateHumidityChart(count, path);
+	    	}
+	    	catch (Exception e)
+	    	{
+	    		e.printStackTrace();
+	    	}
 	    }
 	    
 	if (ret!=null)
