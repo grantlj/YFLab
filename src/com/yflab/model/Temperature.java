@@ -35,5 +35,31 @@ public String getArg1() {
 public void setArg1(String arg1) {
 	this.arg1 = arg1;
 }
-  
+@Override
+public boolean equals(Object obj) {
+	// TODO Auto-generated method stub
+	boolean ret=false;
+	try
+	{
+	  Temperature t=(Temperature) obj;
+	  if (
+		  t.getDate().equals(date) &&
+		  t.getId()==id            &&
+		  t.getValue().equals(value))
+		  ret=true;
+	 
+	} 
+	
+	catch (Exception e)
+	{
+		e.printStackTrace();
+		ret=false;
+	}
+	
+	return ret;
+	
+}
+
+
+
 }

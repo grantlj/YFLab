@@ -29,7 +29,7 @@ public class OperateListDAO {
 			rs.first();
 			int id=rs.getInt(1)+1;
 			
-			System.out.println(id);
+			System.out.println("No."+id+" visit @ "+ip+" @"+dateStr);
 		
 			String sql = "insert into "+tableName+" values("+id+","+"\""+type+"\",\""+ip+"\","+"\"\""+",\"\",\""+dateStr+"\")";
 			//System.out.println(sql);

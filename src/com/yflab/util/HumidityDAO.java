@@ -24,10 +24,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import com.yflab.model.Humidity;
 
+
 import com.yflab.util.DbConnector;
 
 public class HumidityDAO {
   private final static String tableName="humidity";
+	private static ArrayList<Humidity> humidCache=new ArrayList<Humidity>();
+	private static String humidCacheNakedName=null;
 
 	public static Humidity GetLatestHumidity() throws SQLException {
 		
@@ -68,7 +71,7 @@ public class HumidityDAO {
 
 	public static ArrayList<Humidity> getHumidityList(int count) throws SQLException {
 		// TODO Auto-generated method stub
-		ArrayList<Humidity> tempArr=new ArrayList<Humidity>();
+		ArrayList<Humidity> humidArr=new ArrayList<Humidity>();
 		
 
 		DbConnector db = new DbConnector();
@@ -93,7 +96,7 @@ public class HumidityDAO {
 			    temp.setDate(rs.getString(3));
 				temp.setArg0(rs.getString(4));
 				temp.setArg1(rs.getString(5));
-				tempArr.add(temp);
+				humidArr.add(temp);
 				if (!rs.next())
 					break;
 			}
@@ -101,7 +104,7 @@ public class HumidityDAO {
 		
 		catch(Exception e)
 		{
-			tempArr=null;
+			humidArr=null;
 			e.printStackTrace();
 		}
 		
@@ -111,21 +114,23 @@ public class HumidityDAO {
 			if (connection!=null) connection.close();
 		}
 		
-		return tempArr;
+		return humidArr;
 	}
 
 	public static String generateHumidityChart(int count, String path) throws SQLException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<Humidity> tempArr=getHumidityList(count);
-		if (tempArr==null)
+		ArrayList<Humidity> humidArr=getHumidityList(count);
+		if (humidArr==null)
 		  return null;
 		else
 		{
 			
+			if (!compareWithCache(humidArr))
+			{
 			String nakedFileName=UUID.randomUUID().toString()+".png";
 			String chartName=path+"\\"+nakedFileName;
 			
-			System.out.println(chartName);
+			
 		       
 		
 			
@@ -141,7 +146,7 @@ public class HumidityDAO {
 			for (int i=count-1;i>=0;i--)
 			{
 			 
-			   Humidity t=tempArr.get(i);
+			   Humidity t=humidArr.get(i);
 			   mDataset.addValue(Double.parseDouble(t.getValue()), "Humidity", t.getDate());
 			
 			   if (Double.parseDouble(t.getValue())>max)
@@ -187,14 +192,38 @@ public class HumidityDAO {
 			saveAsFile(jfreechart,chartName, 720, 480); 
 			//System.out.println("saveOK!");
 			
+			humidCacheNakedName=nakedFileName;
+			humidCache.clear();
+			for (int i=0;i<humidArr.size();i++)
+				humidCache.add(humidArr.get(i));
+			
 			return nakedFileName;
 		}
+			else
+				return humidCacheNakedName;
 	}
 	
-  
+	}
+
+private static boolean compareWithCache(ArrayList<Humidity> humidArr) {
+		// TODO Auto-generated method stub
+	if (humidCache.size()!=humidArr.size())
+		return false;
+	
+	boolean ret=true;
+	for (int i=0;i<humidCache.size();i++)
+		if (!humidCache.get(i).equals(humidArr.get(i)))
+		{
+			ret=false;
+			break;
+		}
+	return ret;
+}
+	
 
 private static void saveAsFile(JFreeChart chart, String outputPath, int weight,
 		int height) throws IOException {
+	  System.out.println("New file saved.");
 	  System.out.println(chart.toString()+" "+outputPath);
 	  File outFile=new File(outputPath);    
 	  if (!outFile.exists())

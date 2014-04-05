@@ -25,6 +25,9 @@ import com.yflab.model.Temperature;
 
 public class TemperatureDAO {
 	private final static String tableName="temperature";
+	
+	private static ArrayList<Temperature> tempCache=new ArrayList<Temperature>();
+	private static String tempCacheNakedName=null;
 
 	public static Temperature GetLatestTemperature() throws SQLException {
 		
@@ -118,80 +121,109 @@ public class TemperatureDAO {
 		  return null;
 		else
 		{
-			
-			String nakedFileName=UUID.randomUUID().toString()+".png";
-			String chartName=path+"\\"+nakedFileName;
-			
-			System.out.println(chartName);
-		       
-		
-			
-			StandardChartTheme mChartTheme = new StandardChartTheme("CN");  
-	        mChartTheme.setLargeFont(new Font("黑体", Font.BOLD, 20));  
-	        mChartTheme.setExtraLargeFont(new Font("宋体", Font.PLAIN, 15));  
-	        mChartTheme.setRegularFont(new Font("宋体", Font.PLAIN, 15));  
-	        ChartFactory.setChartTheme(mChartTheme);   
-	        
-			DefaultCategoryDataset mDataset = new DefaultCategoryDataset(); 
-			
-			double min=10000,max=-10000;
-			for (int i=count-1;i>=0;i--)
+			if (!compareWithCache(tempArr))
 			{
-			 
-			   Temperature t=tempArr.get(i);
-			   mDataset.addValue(Double.parseDouble(t.getValue()), "Temperature", t.getDate());
 			
-			   if (Double.parseDouble(t.getValue())>max)
-				   max=Double.parseDouble(t.getValue());
+				String nakedFileName=UUID.randomUUID().toString()+".png";
+				String chartName=path+"\\"+nakedFileName;
+				
+				
+			       
+			
+				
+				StandardChartTheme mChartTheme = new StandardChartTheme("CN");  
+		        mChartTheme.setLargeFont(new Font("黑体", Font.BOLD, 20));  
+		        mChartTheme.setExtraLargeFont(new Font("宋体", Font.PLAIN, 15));  
+		        mChartTheme.setRegularFont(new Font("宋体", Font.PLAIN, 15));  
+		        ChartFactory.setChartTheme(mChartTheme);   
+		        
+				DefaultCategoryDataset mDataset = new DefaultCategoryDataset(); 
+				
+				double min=10000,max=-10000;
+				for (int i=count-1;i>=0;i--)
+				{
+				 
+				   Temperature t=tempArr.get(i);
+				   mDataset.addValue(Double.parseDouble(t.getValue()), "Temperature", t.getDate());
+				
+				   if (Double.parseDouble(t.getValue())>max)
+					   max=Double.parseDouble(t.getValue());
+				   
+				   if (Double.parseDouble(t.getValue())<min)
+					   min=Double.parseDouble(t.getValue());
+						   
+				}
+			
 			   
-			   if (Double.parseDouble(t.getValue())<min)
-				   min=Double.parseDouble(t.getValue());
-					   
+			 JFreeChart jfreechart=ChartFactory.createLineChart(
+						"Latest "+count+ " Temperature Data",
+					    "",
+						"Value(C)",
+						mDataset,
+						PlotOrientation.VERTICAL,
+						true,
+						false,
+						false);
+				CategoryPlot plot=(CategoryPlot) jfreechart.getPlot();
+				
+				 plot.setBackgroundPaint(Color.LIGHT_GRAY);  
+			     plot.setRangeGridlinePaint(Color.BLUE);//背景底部横虚线  
+			     plot.setOutlinePaint(Color.RED);//边界线  
+				
+			    plot.getRangeAxis().setLowerBound(min-3);
+				plot.getRangeAxis().setUpperBound(max+3);
+				
+				plot.setBackgroundAlpha(0.5f);
+				plot.setForegroundAlpha(0.5f);
+				
+				CategoryAxis axis = plot.getDomainAxis();
+				axis.setMaximumCategoryLabelLines(30);
+				axis.setMaximumCategoryLabelWidthRatio(2f); 
+				axis.setCategoryLabelPositions(CategoryLabelPositions
+						.createUpRotationLabelPositions(Math.PI / 6.0));
+				axis.setLabelFont(new Font("宋体",Font.PLAIN,8));
+				 
+				//Generate Chart finished.
+				
+				//Save chart to file.
+				saveAsFile(jfreechart,chartName, 720, 480); 
+				//System.out.println("saveOK!");
+				
+				tempCacheNakedName=nakedFileName;
+				tempCache.clear();
+				for (int i=0;i<tempArr.size();i++)
+					tempCache.add(tempArr.get(i));
+				
+				return nakedFileName;
 			}
-		
-		   
-		 JFreeChart jfreechart=ChartFactory.createLineChart(
-					"Latest "+count+ " Temperature Data",
-				    "",
-					"Value(C)",
-					mDataset,
-					PlotOrientation.VERTICAL,
-					true,
-					false,
-					false);
-			CategoryPlot plot=(CategoryPlot) jfreechart.getPlot();
 			
-			 plot.setBackgroundPaint(Color.LIGHT_GRAY);  
-		     plot.setRangeGridlinePaint(Color.BLUE);//背景底部横虚线  
-		     plot.setOutlinePaint(Color.RED);//边界线  
-			
-		    plot.getRangeAxis().setLowerBound(min-3);
-			plot.getRangeAxis().setUpperBound(max+3);
-			
-			plot.setBackgroundAlpha(0.5f);
-			plot.setForegroundAlpha(0.5f);
-			
-			CategoryAxis axis = plot.getDomainAxis();
-			axis.setMaximumCategoryLabelLines(30);
-			axis.setMaximumCategoryLabelWidthRatio(2f); 
-			axis.setCategoryLabelPositions(CategoryLabelPositions
-					.createUpRotationLabelPositions(Math.PI / 6.0));
-			axis.setLabelFont(new Font("宋体",Font.PLAIN,8));
-			 
-			//Generate Chart finished.
-			
-			//Save chart to file.
-			saveAsFile(jfreechart,chartName, 720, 480); 
-			//System.out.println("saveOK!");
-			
-			return nakedFileName;
+			else
+				return tempCacheNakedName;
 		}
 	}
 	
   
 
+private static boolean compareWithCache(ArrayList<Temperature> tempArr) {
+		// TODO Auto-generated method stub
+		if (tempCache.size()!=tempArr.size())
+			return false;
+		
+		boolean ret=true;
+		for (int i=0;i<tempCache.size();i++)
+		
+			if (!tempCache.get(i).equals(tempArr.get(i)))
+			{
+				ret=false;
+				break;
+			}
+		
+		return ret;
+	}
+
 private static void saveAsFile(JFreeChart chart, String outputPath, int weight,
 		int height) throws IOException {
+	  System.out.println("New file saved.");
 	  System.out.println(chart.toString()+" "+outputPath);
 	  File outFile=new File(outputPath);    
 	  if (!outFile.exists())
