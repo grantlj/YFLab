@@ -6,7 +6,7 @@ import com.yflab.model.MyEnvironment;
 
 public class MyEnvironmentDAO {
   
-  
+   
   public static MyEnvironment GetLatestAllData() throws SQLException
   {
 	  MyEnvironment myEnvironment=new MyEnvironment();
