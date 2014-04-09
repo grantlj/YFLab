@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.yflab.model.Light;
 import com.yflab.model.MyEnvironment;
 import com.yflab.model.Humidity;
 import com.yflab.model.Temperature;
+import com.yflab.util.LightDAO;
 import com.yflab.util.MyEnvironmentDAO;
 import com.yflab.util.HumidityDAO;
 import com.yflab.util.OperateListDAO;
@@ -184,6 +186,21 @@ public class GetData extends HttpServlet {
 	    		count=Integer.parseInt((String) request.getParameter("count"));
 	    		ret=HumidityDAO.generateHumidityChart(count, path);
 	    	}
+	    	catch (Exception e)
+	    	{
+	    		e.printStackTrace();
+	    	}
+	    }
+	    
+	    if (reqType.equals("lightState"))
+	    {
+	    	Light light=null;
+	    	try
+	    	{
+	    		light=LightDAO.getLightState();
+	    		ret=getJsonStr(light);
+	    	}
+	    	
 	    	catch (Exception e)
 	    	{
 	    		e.printStackTrace();
