@@ -24,7 +24,7 @@ public class LightDAO {
 		 {
 			 connection=db.getConnection();
 			 statement=connection.createStatement();
-			 String sql="select * from "+tableName+";";
+			 String sql="select * from "+tableName+" order by id DESC;";
 			 ResultSet rs;
 			 rs=statement.executeQuery(sql);
 			 
@@ -85,10 +85,11 @@ public class LightDAO {
 			 connection=db.getConnection();
 			 statement=connection.createStatement();
 			 
-			 for (int i=count-1;i>=0;i--)
+			 for (int i=0;i<count;i++)
 			 	{
-				  String sql="update "+tableName+" SET state="+(lightMap[i])+" where id="+(count-i)+";";
-				 // System.out.println(sql);
+				  String sql="update "+tableName+" SET state="+(lightMap[i])+" where id="+(i+1)+";";
+				  System.out.println(sql);
+				  // System.out.println(sql);
 				  statement.execute(sql);
 				}
 			ret=true;

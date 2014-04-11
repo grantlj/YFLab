@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 import org.jfree.chart.ChartFactory;
@@ -241,5 +243,42 @@ private static void saveAsFile(JFreeChart chart, String outputPath, int weight,
 		e.printStackTrace();
 	}        
       
+}
+
+public static void setLatestHumidity(int junction, int humidity) throws SQLException {
+	// TODO Auto-generated method stub
+	 DbConnector db = new DbConnector();
+	 Statement statement=null;
+	 Connection connection=null;
+	 try
+	 {
+		 connection=db.getConnection();
+		 statement=connection.createStatement();
+		 String sql="select count(id) from "+tableName+";";
+		 ResultSet rs=null;
+		 rs=statement.executeQuery(sql);
+		 rs.next();
+		 
+		 int id=rs.getInt(1)+1;
+		 int value=humidity;
+		 String date=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		 int arg0=junction;
+		 
+		 sql="insert into "+tableName+" VALUES("+id+","+value+",\""+date+"\","+arg0+",\"\");";
+		 statement.execute(sql);
+		
+	 }
+	 catch (Exception e)
+	 {
+		 e.printStackTrace();
+		
+		 
+	 }
+	 
+	 finally
+	 {
+		 if (statement!=null) statement.close();
+		 if (connection!=null) connection.close();
+	 }
 }    
 }

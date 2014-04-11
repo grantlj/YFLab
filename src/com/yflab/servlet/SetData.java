@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.yflab.util.HumidityDAO;
 import com.yflab.util.LightDAO;
 import com.yflab.util.OperateListDAO;
+import com.yflab.util.TemperatureDAO;
 
 public class SetData extends HttpServlet {
 
@@ -87,6 +89,36 @@ public class SetData extends HttpServlet {
 			        ret="Set lightState OK";
 				  else 
 					ret="ERR";
+			}
+			catch (Exception e)
+			{
+				ret="ERR";
+			}
+		}
+		
+		if (reqType.equals("sensorData"))
+		{
+			
+			/*
+			 * http://localhost:8080/YFLab/SetData?reqType=sensorData&junction=1&light1=1&light2=0&humidity=35&temperature=40
+			 */
+			try
+			{
+			   int junction=Integer.parseInt((String) request.getParameter("junction"));
+			   
+			   int light1=Integer.parseInt((String) request.getParameter("light1"));
+			   int light2=Integer.parseInt((String) request.getParameter("light2"));
+			   
+			   int lightState=light1*1+light2*2;
+			   
+			   int humidity=Integer.parseInt((String) request.getParameter("humidity"));
+			   int temperature=Integer.parseInt((String) request.getParameter("temperature"));
+			   
+			   TemperatureDAO.setLatestTemperature(junction,temperature);
+			   HumidityDAO.setLatestHumidity(junction,humidity);
+			   LightDAO.setLightState(lightState);
+			   
+			   ret="Set Sensor Data OK";
 			}
 			catch (Exception e)
 			{
