@@ -88,7 +88,7 @@ public class LightDAO {
 			 for (int i=0;i<count;i++)
 			 	{
 				  String sql="update "+tableName+" SET state="+(lightMap[i])+" where id="+(i+1)+";";
-				  System.out.println(sql);
+				 // System.out.println(sql);
 				  // System.out.println(sql);
 				  statement.execute(sql);
 				}
