@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.yflab.model.Humidity;
 import com.yflab.model.Temperature;
 import com.yflab.util.HumidityDAO;
+import com.yflab.util.LightDAO;
 import com.yflab.util.OperateListDAO;
 import com.yflab.util.TemperatureDAO;
 
@@ -93,15 +94,19 @@ public class ControlCenter extends HttpServlet {
       String tempChartStr=TemperatureDAO.generateTemperatureChart(maxItemCount,path);
       String humidChartStr=HumidityDAO.generateHumidityChart(maxItemCount,path);
       
+      String lightState=String.valueOf(LightDAO.getLightState().getLightState());
+      
       request.setAttribute("tempArr", tempArr);
       request.setAttribute("humidArr",humidArr);
       request.setAttribute("tempChartStr", tempChartStr);
       request.setAttribute("humidChartStr", humidChartStr);
+      request.setAttribute("lightState",lightState);
       
       request.getRequestDispatcher("/view/ControlCenter.jsp").forward(request, response);
 	}
 	
 	catch (Exception e){
+		e.printStackTrace();
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter pw = response.getWriter();
 		pw.println("ERR");

@@ -145,7 +145,7 @@ public class HumidityDAO {
 			DefaultCategoryDataset mDataset = new DefaultCategoryDataset(); 
 			
 			double min=10000,max=-10000;
-			for (int i=count-1;i>=0;i--)
+			for (int i=humidArr.size()-1;i>=0;i--)
 			{
 			 
 			   Humidity t=humidArr.get(i);

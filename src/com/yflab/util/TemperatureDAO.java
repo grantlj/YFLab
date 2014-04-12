@@ -142,7 +142,7 @@ public class TemperatureDAO {
 				DefaultCategoryDataset mDataset = new DefaultCategoryDataset(); 
 				
 				double min=10000,max=-10000;
-				for (int i=count-1;i>=0;i--)
+				for (int i=tempArr.size()-1;i>=0;i--)
 				{
 				 
 				   Temperature t=tempArr.get(i);

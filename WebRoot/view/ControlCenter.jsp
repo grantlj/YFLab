@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
+﻿<%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ page import="com.yflab.model.Humidity" %>
 <%@ page import="com.yflab.model.Temperature" %>
@@ -135,6 +135,7 @@ table.tab_css_3 tr.tr_css{
    ArrayList<Humidity> humidArr=(ArrayList<Humidity>) request.getAttribute("humidArr");
    String tempChartStr=(String) request.getAttribute("tempChartStr");
    String humidChartStr=(String) request.getAttribute("humidChartStr");
+  // int lightState=(String) request.getAttribute("lightState")
 %>
 
 <body>
@@ -186,6 +187,39 @@ table.tab_css_3 tr.tr_css{
      <%} %>
     </table>
     
+     <p>
+	   <form>
+	   <table>
+	     <tr>
+            <td>
+               <h3>灯光1</h3>
+               <input type="radio" name="switch1" value="close1"/>关<br />
+               <input type="radio" name="switch1" value="open1" />开<br />
+			</td>
+			<td>
+               <h3>灯光2</h3>
+	           <input type="radio" name="switch2" value="close2" />关<br />
+               <input type="radio" name="switch2" value="open2" />开<br />
+			</td>
+			<td>
+                <h3>灯光3</h3>
+	           <input type="radio" name="switch3" value="close3" />关<br />
+               <input type="radio" name="switch3" value="open3" />开<br />
+			</td>
+			<td>
+                <h3>灯光4</h3>
+	           <input type="radio" name="switch4" value="close4" />关<br />
+               <input type="radio" name="switch4" value="open4" />开<br />
+			</td>
+		 <tr>
+		 <tr>
+		     <td><input type="submit" value="设置灯光"/></td>
+		 </tr>
+	   </table>
+	   </form>
+	</p>
+
+
   </center>
 </body>
 </html>

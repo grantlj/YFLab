@@ -104,8 +104,9 @@ flags：指定调用方式，通常设置为0
 #include "stdafx.h"
 
 #include <stdio.h>
-
-
+#include <afxinet.h>
+#include <afx.h>
+#include <afxwin.h>
 #include <winsock2.h>
 #pragma comment(lib,"ws2_32.lib")
 #include <iostream>
@@ -119,23 +120,82 @@ using namespace std;
 void sendData(int junction, int lightState_1, int lightState_2, int temperature, int humidity)
 {
 	
-
+	//cout << "in" << endl;
 	//CString destUrl;
 	//destUrl.Format((wchar_t)("grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d"), junction, lightState_1, lightState_2, temperature, humidity);
 
 	char* destUrl = new char[255];
-	sprintf(destUrl, "http://grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d", junction, lightState_1, lightState_2, temperature, humidity);
+
+	srand(time(NULL));
+	
+	sprintf(destUrl, "http://grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d&rnd=%d", 
+		    junction, 
+			lightState_1, 
+			lightState_2, 
+			temperature, 
+			humidity,
+			rand()*1000);
 
 	TCHAR tdestUrl[255];
 	MultiByteToWideChar(CP_ACP, 0, destUrl, -1, tdestUrl, 255);
 
+	CInternetSession session;
+	CHttpFile *file = NULL;
+	
+	CString strHtml = "";   //存放网页数据
 
-	ShellExecute(NULL, L"open",tdestUrl, NULL, NULL, SW_SHOWMAXIMIZED);
+		try{
+		file = (CHttpFile*)session.OpenURL(tdestUrl);
+		
+		//cout << "ok" << endl;
+	}
+	catch (CInternetException * m_pException){
+		//cout << "fail!" << endl;
+		cout << "uploading data to server failed." << endl;
+		file = NULL;
+		m_pException->m_dwError;
+		m_pException->Delete();
+	//	session.Close();
+		//MessageBox("CInternetException");
+	}
+	CString strLine;
+	if (file != NULL){
+		while (file->ReadString(strLine) != NULL){
+			strHtml += strLine;
+		}
+		//cout << "not null" << endl;
+
+	}
+	else{
+		//MessageBox("fail");
+	}
+    
+
+		session.Close();
+		if (file!=NULL) file->Close();
+		delete file;
+		file = NULL;
+	
+
+
+
+	//ShellExecute(NULL, L"open", L"iexplore.exe", tdestUrl, NULL, SW_SHOW);
+
 }
 
-int main()
+int main(int argc, char **argv)
 {
-	//sendData(1, 1, 1, 20, 30);
+	CWinApp app((LPCTSTR)argv[0]);
+	app.InitApplication();
+	AfxWinInit(::GetModuleHandle(NULL), NULL, ::GetCommandLine(), 0);
+
+	
+	/*do
+	{
+		SleepEx(2000,true);
+		sendData(1, 1, 1, 20, 30);
+	} while (true);
+	*/
 	//===========================================================
 	//===========================================================
 	//Load Necessary Library;
@@ -243,6 +303,8 @@ int main()
 
 		nRecv = recv(cli, Rbuf, sizeof(Rbuf), 0);
 
+		//cout << Rbuf << "!!!" << endl;
+
 		if (nRecv == 0) //客户端已经关闭连接
 			printf("Client has closed the connection\n");
 
@@ -260,7 +322,9 @@ int main()
 			int temperature = Rbuf[4];
 			int humidity = Rbuf[5];
 
-			sendData(junction, !lightState_1,!lightState_2, temperature, humidity);
+			//cout << junction << "," << lightState_1 << "," << temperature << "," << humidity << endl;
+			if (junction==1)
+			  sendData(junction, !lightState_1,!lightState_2, temperature, humidity);
 		}
 
 		//Now Do Send!!!!!!
