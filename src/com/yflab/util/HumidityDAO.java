@@ -31,8 +31,8 @@ import com.yflab.util.DbConnector;
 
 public class HumidityDAO {
   private final static String tableName="humidity";
-	private  ArrayList<Humidity> humidCache=new ArrayList<Humidity>();
-	private  String humidCacheNakedName=null;
+	private  static ArrayList<Humidity> humidCache=new ArrayList<Humidity>();
+	private  static String humidCacheNakedName=null;
 
 	public Humidity GetLatestHumidity() throws SQLException {
 		

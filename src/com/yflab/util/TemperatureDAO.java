@@ -28,8 +28,8 @@ import com.yflab.model.Temperature;
 public class TemperatureDAO {
 	private final static String tableName="temperature";
 	
-	private  ArrayList<Temperature> tempCache=new ArrayList<Temperature>();
-	private  String tempCacheNakedName=null;
+	private static ArrayList<Temperature> tempCache=new ArrayList<Temperature>();
+	private static String tempCacheNakedName=null;
 
 	public Temperature GetLatestTemperature() throws SQLException {
 		
