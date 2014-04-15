@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 public class OperateListDAO {
 	private final static String tableName="operatelist";
 	
-	public static void addViewLog(String ip, String type) throws SQLException {
+	public void addViewLog(String ip, String type) throws SQLException {
 		// TODO Auto-generated method stub
 		DbConnector db = new DbConnector();
 		Statement statement=null;

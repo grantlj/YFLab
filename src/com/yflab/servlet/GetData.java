@@ -88,7 +88,7 @@ public class GetData extends HttpServlet {
 		{
 			Humidity humidity=null;
 			try {
-				humidity=HumidityDAO.GetLatestHumidity();
+				humidity= new HumidityDAO().GetLatestHumidity();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -103,7 +103,7 @@ public class GetData extends HttpServlet {
 	    	Temperature temperature=null;
 	    	try
 	    	{
-	    		temperature=TemperatureDAO.GetLatestTemperature();
+	    		temperature=new TemperatureDAO().GetLatestTemperature();
 	    	}
 	    	catch (SQLException e)
 	    	{
@@ -119,7 +119,7 @@ public class GetData extends HttpServlet {
 	    	MyEnvironment myEnvironment=null;
 	    	try
 	    	{
-	    		myEnvironment=MyEnvironmentDAO.GetLatestAllData();
+	    		myEnvironment=new MyEnvironmentDAO().GetLatestAllData();
 	    	}
 	    	
 	    	catch (SQLException e)
@@ -138,7 +138,7 @@ public class GetData extends HttpServlet {
 	    	  try
 	    	  {
 	    	    count=Integer.parseInt((String)request.getParameter("count"));
-	    	    ArrayList<Temperature> tempArr=TemperatureDAO.getTemperatureList(count);
+	    	    ArrayList<Temperature> tempArr=new TemperatureDAO().getTemperatureList(count);
 	    	    ret=getJsonStr(tempArr);
 	    	  }
 	    	    catch (Exception e)
@@ -153,7 +153,7 @@ public class GetData extends HttpServlet {
 	    	  try
 	    	  {
 	    	    count=Integer.parseInt((String)request.getParameter("count"));
-	    	    ArrayList<Humidity> humidArr=HumidityDAO.getHumidityList(count);
+	    	    ArrayList<Humidity> humidArr=new HumidityDAO().getHumidityList(count);
 	    	  
 	    	    ret=getJsonStr(humidArr);
 	    	  }
@@ -170,7 +170,7 @@ public class GetData extends HttpServlet {
 	    	try
 	    	{
 	    		count=Integer.parseInt((String) request.getParameter("count"));
-	    		ret=TemperatureDAO.generateTemperatureChart(count, path);
+	    		ret=new TemperatureDAO().generateTemperatureChart(count, path);
 	    	}
 	    	catch (Exception e)
 	    	{
@@ -184,7 +184,7 @@ public class GetData extends HttpServlet {
 	    	try
 	    	{
 	    		count=Integer.parseInt((String) request.getParameter("count"));
-	    		ret=HumidityDAO.generateHumidityChart(count, path);
+	    		ret=new HumidityDAO().generateHumidityChart(count, path);
 	    	}
 	    	catch (Exception e)
 	    	{
@@ -197,7 +197,7 @@ public class GetData extends HttpServlet {
 	    	Light light=null;
 	    	try
 	    	{
-	    		light=LightDAO.getLightState();
+	    		light=new LightDAO().getLightState();
 	    		ret=getJsonStr(light);
 	    	}
 	    	
@@ -219,7 +219,7 @@ public class GetData extends HttpServlet {
 	private void addViewLog(String ip,String type) {
 		// TODO Auto-generated method stub
 	  try {
-		OperateListDAO.addViewLog(ip,type);
+		new OperateListDAO().addViewLog(ip,type);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

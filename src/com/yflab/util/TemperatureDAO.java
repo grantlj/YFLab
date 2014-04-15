@@ -28,10 +28,10 @@ import com.yflab.model.Temperature;
 public class TemperatureDAO {
 	private final static String tableName="temperature";
 	
-	private static ArrayList<Temperature> tempCache=new ArrayList<Temperature>();
-	private static String tempCacheNakedName=null;
+	private  ArrayList<Temperature> tempCache=new ArrayList<Temperature>();
+	private  String tempCacheNakedName=null;
 
-	public static Temperature GetLatestTemperature() throws SQLException {
+	public Temperature GetLatestTemperature() throws SQLException {
 		
 
 		DbConnector db = new DbConnector();
@@ -68,7 +68,7 @@ public class TemperatureDAO {
 		return ret;
 	}
 
-	public static ArrayList<Temperature> getTemperatureList(int count) throws SQLException {
+	public  ArrayList<Temperature> getTemperatureList(int count) throws SQLException {
 		// TODO Auto-generated method stub
 		ArrayList<Temperature> tempArr=new ArrayList<Temperature>();
 		
@@ -116,7 +116,7 @@ public class TemperatureDAO {
 		return tempArr;
 	}
 
-	public static String generateTemperatureChart(int count, String path) throws SQLException, IOException {
+	public  String generateTemperatureChart(int count, String path) throws SQLException, IOException {
 		// TODO Auto-generated method stub
 		ArrayList<Temperature> tempArr=getTemperatureList(count);
 		if (tempArr==null)
@@ -206,7 +206,7 @@ public class TemperatureDAO {
 	
   
 
-private static boolean compareWithCache(ArrayList<Temperature> tempArr) {
+private boolean compareWithCache(ArrayList<Temperature> tempArr) {
 		// TODO Auto-generated method stub
 		if (tempCache.size()!=tempArr.size())
 			return false;
@@ -223,7 +223,7 @@ private static boolean compareWithCache(ArrayList<Temperature> tempArr) {
 		return ret;
 	}
 
-private static void saveAsFile(JFreeChart chart, String outputPath, int weight,
+private  void saveAsFile(JFreeChart chart, String outputPath, int weight,
 		int height) throws IOException {
 	  System.out.println("New file saved.");
 	  System.out.println(chart.toString()+" "+outputPath);
@@ -245,7 +245,7 @@ private static void saveAsFile(JFreeChart chart, String outputPath, int weight,
       
 }
 
-public static void setLatestTemperature(int junction, int temperature) throws SQLException {
+public  void setLatestTemperature(int junction, int temperature) throws SQLException {
 	// TODO Auto-generated method stub
 	 DbConnector db = new DbConnector();
 	 Statement statement=null;

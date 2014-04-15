@@ -105,8 +105,16 @@ flags：指定调用方式，通常设置为0
 
 #include <stdio.h>
 #include <afxinet.h>
+
 #include <afx.h>
+
+#include <atlstr.h>
+#include <fstream>
+
 #include <afxwin.h>
+#include <UrlMon.h>
+#pragma comment(lib, "urlmon.lib")
+
 #include <winsock2.h>
 #pragma comment(lib,"ws2_32.lib")
 #include <iostream>
@@ -115,6 +123,57 @@ using namespace std;
 #pragma comment(lib,"shell32.lib")
 
 
+int cmdtoSend[3];
+void sendLightState()
+{
+	char* destUrl = new char[255];
+	sprintf(destUrl, "http://grantlj.gicp.net:8080/YFLab/GetData?reqType=lightState&rnd=%d",
+		rand() * 1000);
+
+	TCHAR tdestUrl[255];
+	MultiByteToWideChar(CP_ACP, 0, destUrl, -1, tdestUrl, 255);
+
+	CString strHtml = "";   //存放网页数据
+
+	HRESULT hr = URLDownloadToFile(0, tdestUrl,
+		_T("D:\\tmp.dat"), 0, NULL);
+	int t = -1;
+	if (hr == S_OK)
+	{
+		FILE* f=fopen("D:\\tmp.dat", "r");
+		char str[255];
+		fgets(str, sizeof(str), f);
+		fclose(f);
+        
+		
+		t = (str[29] - '0') * 10;
+
+		if (str[30] >= '0' && str[30] <= '9')
+			t = t + (str[30] - '0');
+	}
+
+	int dig[10];
+	int count = 0;
+	while (t > 0)
+	{
+		dig[count] = t % 2;
+		t /= 2;
+		count++;
+	}
+
+
+
+	int lightState1 = dig[0];
+	int lightState2 = dig[1];
+
+	
+	
+	cmdtoSend[0] = 1;
+	cmdtoSend[1] = !lightState1;
+	cmdtoSend[2] = !lightState2;
+
+
+}
 
 
 void sendData(int junction, int lightState_1, int lightState_2, int temperature, int humidity)
@@ -124,58 +183,68 @@ void sendData(int junction, int lightState_1, int lightState_2, int temperature,
 	//CString destUrl;
 	//destUrl.Format((wchar_t)("grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d"), junction, lightState_1, lightState_2, temperature, humidity);
 
-	char* destUrl = new char[255];
+	cout << junction << lightState_1 << lightState_2 << temperature << humidity << "!!!" << endl;
+	if (temperature + humidity != 0)
+	{
 
-	srand(time(NULL));
-	
-	sprintf(destUrl, "http://grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d&rnd=%d", 
-		    junction, 
-			lightState_1, 
-			lightState_2, 
-			temperature, 
+		char* destUrl = new char[255];
+
+		srand(time(NULL));
+
+		sprintf(destUrl, "http://grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d&rnd=%d",
+			junction,
+			lightState_1,
+			lightState_2,
+			temperature,
 			humidity,
-			rand()*1000);
+			rand() * 1000);
 
-	TCHAR tdestUrl[255];
-	MultiByteToWideChar(CP_ACP, 0, destUrl, -1, tdestUrl, 255);
+		TCHAR tdestUrl[255];
+		MultiByteToWideChar(CP_ACP, 0, destUrl, -1, tdestUrl, 255);
 
-	CInternetSession session;
-	CHttpFile *file = NULL;
-	
-	CString strHtml = "";   //存放网页数据
+		CInternetSession session;
+		CHttpFile *file = NULL;
+
+		CString strHtml = "";   //存放网页数据
 
 		try{
-		file = (CHttpFile*)session.OpenURL(tdestUrl);
+			file = (CHttpFile*)session.OpenURL(tdestUrl);
+
+			//cout << "ok" << endl;
+		}
+		catch (CInternetException * m_pException){
+			//cout << "fail!" << endl;
+			cout << "uploading data to server failed." << endl;
+			file = NULL;
+			m_pException->m_dwError;
+			m_pException->Delete();
+			//	session.Close();
+			//MessageBox("CInternetException");
+		}
+
 		
-		//cout << "ok" << endl;
-	}
-	catch (CInternetException * m_pException){
-		//cout << "fail!" << endl;
-		cout << "uploading data to server failed." << endl;
-		file = NULL;
-		m_pException->m_dwError;
-		m_pException->Delete();
-	//	session.Close();
-		//MessageBox("CInternetException");
-	}
-	CString strLine;
-	if (file != NULL){
+
+		CString strLine;
+		if (file != NULL){
 		while (file->ReadString(strLine) != NULL){
-			strHtml += strLine;
+		strHtml += strLine;
 		}
 		//cout << "not null" << endl;
 
-	}
-	else{
-		//MessageBox("fail");
-	}
-    
+		}
 
+		
 		session.Close();
-		if (file!=NULL) file->Close();
-		delete file;
-		file = NULL;
-	
+		if (file != NULL)
+		{
+			file->Close();
+			delete file;
+			file = NULL;
+		}
+
+		sendLightState();
+	}
+
 
 
 
@@ -188,14 +257,7 @@ int main(int argc, char **argv)
 	CWinApp app((LPCTSTR)argv[0]);
 	app.InitApplication();
 	AfxWinInit(::GetModuleHandle(NULL), NULL, ::GetCommandLine(), 0);
-
 	
-	/*do
-	{
-		SleepEx(2000,true);
-		sendData(1, 1, 1, 20, 30);
-	} while (true);
-	*/
 	//===========================================================
 	//===========================================================
 	//Load Necessary Library;
@@ -327,10 +389,8 @@ int main(int argc, char **argv)
 			  sendData(junction, !lightState_1,!lightState_2, temperature, humidity);
 		}
 
-		//Now Do Send!!!!!!
-		//int  isend;
-		//char  Sbuf[] = "Hello client! I am server !!";
-		//isend=send(cli,Sbuf,sizeof(Sbuf),0);
+		
+		send(cli,(char*) cmdtoSend,sizeof(cmdtoSend),0);
 
 		/*
 		if (isend==SOCKET_ERROR)

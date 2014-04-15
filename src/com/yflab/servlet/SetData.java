@@ -85,7 +85,7 @@ public class SetData extends HttpServlet {
 			{
 			  lightState=Integer.parseInt(arg0);
 			  if (lightState!=-1)
-				  if (LightDAO.setLightState(lightState))
+				  if (new LightDAO().setLightState(lightState))
 			        ret="Set lightState OK";
 				  else 
 					ret="ERR";
@@ -114,9 +114,9 @@ public class SetData extends HttpServlet {
 			   int humidity=Integer.parseInt((String) request.getParameter("humidity"));
 			   int temperature=Integer.parseInt((String) request.getParameter("temperature"));
 			   
-			   TemperatureDAO.setLatestTemperature(junction,temperature);
-			   HumidityDAO.setLatestHumidity(junction,humidity);
-			   LightDAO.setLightState(lightState);
+			   new TemperatureDAO().setLatestTemperature(junction,temperature);
+			   new HumidityDAO().setLatestHumidity(junction,humidity);
+			   new LightDAO().setLightState(lightState);
 			   
 			   ret="Set Sensor Data OK";
 			}
@@ -135,7 +135,7 @@ public class SetData extends HttpServlet {
 	private void addViewLog(String ip,String type) {
 		// TODO Auto-generated method stub
 	  try {
-		OperateListDAO.addViewLog(ip,type);
+		new OperateListDAO().addViewLog(ip,type);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

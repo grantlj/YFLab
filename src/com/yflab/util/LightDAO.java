@@ -11,7 +11,7 @@ import com.yflab.model.Light;
 public class LightDAO {
 	 private final static String tableName="light";
 	 
-	 public static Light getLightState() throws SQLException
+	 public  Light getLightState() throws SQLException
 	 {
 		 Light ret=null;
 		 
@@ -63,7 +63,7 @@ public class LightDAO {
 		 return ret;
 	 }
 	 
-	 public static boolean setLightState(int lightState) throws SQLException
+	 public boolean setLightState(int lightState) throws SQLException
 	 {
 		 boolean ret=false;
 		 int[] lightMap=new int[100];

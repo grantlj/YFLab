@@ -7,11 +7,11 @@ import com.yflab.model.MyEnvironment;
 public class MyEnvironmentDAO {
   
    
-  public static MyEnvironment GetLatestAllData() throws SQLException
+  public MyEnvironment GetLatestAllData() throws SQLException
   {
 	  MyEnvironment myEnvironment=new MyEnvironment();
-	  myEnvironment.setHumidity(HumidityDAO.GetLatestHumidity());
-	  myEnvironment.setTemperature(TemperatureDAO.GetLatestTemperature());
+	  myEnvironment.setHumidity(new HumidityDAO().GetLatestHumidity());
+	  myEnvironment.setTemperature(new TemperatureDAO().GetLatestTemperature());
 	
 	  
 	  return myEnvironment;

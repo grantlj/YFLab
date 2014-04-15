@@ -88,13 +88,13 @@ public class ControlCenter extends HttpServlet {
       ArrayList<Temperature> tempArr;
       ArrayList<Humidity> humidArr;
       
-      tempArr=TemperatureDAO.getTemperatureList(maxItemCount);
-      humidArr=HumidityDAO.getHumidityList(maxItemCount);
+      tempArr=new TemperatureDAO().getTemperatureList(maxItemCount);
+      humidArr=new HumidityDAO().getHumidityList(maxItemCount);
       
-      String tempChartStr=TemperatureDAO.generateTemperatureChart(maxItemCount,path);
-      String humidChartStr=HumidityDAO.generateHumidityChart(maxItemCount,path);
+      String tempChartStr=new TemperatureDAO().generateTemperatureChart(maxItemCount,path);
+      String humidChartStr=new HumidityDAO().generateHumidityChart(maxItemCount,path);
       
-      String lightState=String.valueOf(LightDAO.getLightState().getLightState());
+      String lightState=String.valueOf(new LightDAO().getLightState().getLightState());
       
       request.setAttribute("tempArr", tempArr);
       request.setAttribute("humidArr",humidArr);
@@ -133,7 +133,7 @@ public class ControlCenter extends HttpServlet {
 	private void addViewLog(String ip,String type) {
 		// TODO Auto-generated method stub
 	  try {
-		OperateListDAO.addViewLog(ip,type);
+		new OperateListDAO().addViewLog(ip,type);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

@@ -31,10 +31,10 @@ import com.yflab.util.DbConnector;
 
 public class HumidityDAO {
   private final static String tableName="humidity";
-	private static ArrayList<Humidity> humidCache=new ArrayList<Humidity>();
-	private static String humidCacheNakedName=null;
+	private  ArrayList<Humidity> humidCache=new ArrayList<Humidity>();
+	private  String humidCacheNakedName=null;
 
-	public static Humidity GetLatestHumidity() throws SQLException {
+	public Humidity GetLatestHumidity() throws SQLException {
 		
 
 		DbConnector db = new DbConnector();
@@ -71,7 +71,7 @@ public class HumidityDAO {
 		return ret;
 	}
 
-	public static ArrayList<Humidity> getHumidityList(int count) throws SQLException {
+	public  ArrayList<Humidity> getHumidityList(int count) throws SQLException {
 		// TODO Auto-generated method stub
 		ArrayList<Humidity> humidArr=new ArrayList<Humidity>();
 		
@@ -119,7 +119,7 @@ public class HumidityDAO {
 		return humidArr;
 	}
 
-	public static String generateHumidityChart(int count, String path) throws SQLException, IOException {
+	public String generateHumidityChart(int count, String path) throws SQLException, IOException {
 		// TODO Auto-generated method stub
 		ArrayList<Humidity> humidArr=getHumidityList(count);
 		if (humidArr==null)
@@ -207,7 +207,7 @@ public class HumidityDAO {
 	
 	}
 
-private static boolean compareWithCache(ArrayList<Humidity> humidArr) {
+private  boolean compareWithCache(ArrayList<Humidity> humidArr) {
 		// TODO Auto-generated method stub
 	if (humidCache.size()!=humidArr.size())
 		return false;
@@ -223,7 +223,7 @@ private static boolean compareWithCache(ArrayList<Humidity> humidArr) {
 }
 	
 
-private static void saveAsFile(JFreeChart chart, String outputPath, int weight,
+private  void saveAsFile(JFreeChart chart, String outputPath, int weight,
 		int height) throws IOException {
 	  System.out.println("New file saved.");
 	  System.out.println(chart.toString()+" "+outputPath);
@@ -245,7 +245,7 @@ private static void saveAsFile(JFreeChart chart, String outputPath, int weight,
       
 }
 
-public static void setLatestHumidity(int junction, int humidity) throws SQLException {
+public  void setLatestHumidity(int junction, int humidity) throws SQLException {
 	// TODO Auto-generated method stub
 	 DbConnector db = new DbConnector();
 	 Statement statement=null;
