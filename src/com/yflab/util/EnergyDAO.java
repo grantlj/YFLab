@@ -56,6 +56,7 @@ public class EnergyDAO {
 	 public boolean setEnergyState(int power_hi,int power_lo,int total) throws SQLException
 	 {
 		 String power=String.valueOf(power_hi*256+power_lo);
+		 
 		 boolean ret=false;
 		 
 		 DbConnector db = new DbConnector();
@@ -66,7 +67,8 @@ public class EnergyDAO {
 			 connection=db.getConnection();
 			 statement=connection.createStatement();
 			 
-		     String sql="update "+tableName+" SET power=\""+(power)+"\"+total=\""+(total)+"\" where id="+(1)+";";
+		     String sql="update "+tableName+" SET power=\""+(power)+"\", total=\""+(total)+"\" where id="+(1)+";";
+		    // System.out.println(sql);
 		     statement.executeUpdate(sql);
 				
 			ret=true;

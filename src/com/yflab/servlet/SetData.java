@@ -134,6 +134,7 @@ public class SetData extends HttpServlet {
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 				ret="ERR";
 			}
 		}
