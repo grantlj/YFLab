@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.yflab.model.Humidity;
 import com.yflab.model.Temperature;
 import com.yflab.util.HumidityDAO;
+import com.yflab.util.InfraredDAO;
 import com.yflab.util.LightDAO;
 import com.yflab.util.OperateListDAO;
+import com.yflab.util.SmogDAO;
 import com.yflab.util.TemperatureDAO;
 
 public class ControlCenter extends HttpServlet {
@@ -95,12 +97,16 @@ public class ControlCenter extends HttpServlet {
       String humidChartStr=new HumidityDAO().generateHumidityChart(maxItemCount,path);
       
       String lightState=String.valueOf(new LightDAO().getLightState().getLightState());
+      String smogState=new SmogDAO().getSmogState().getState();
+      String infraredState=new InfraredDAO().getInfraredState().getState();
       
       request.setAttribute("tempArr", tempArr);
       request.setAttribute("humidArr",humidArr);
       request.setAttribute("tempChartStr", tempChartStr);
       request.setAttribute("humidChartStr", humidChartStr);
       request.setAttribute("lightState",lightState);
+      request.setAttribute("smogState",smogState);
+      request.setAttribute("infraredState", infraredState);
       
       request.getRequestDispatcher("/view/ControlCenter.jsp").forward(request, response);
 	}

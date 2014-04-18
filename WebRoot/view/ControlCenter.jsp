@@ -3,12 +3,16 @@
 <%@ page import="com.yflab.model.Humidity" %>
 <%@ page import="com.yflab.model.Temperature" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.yflab.model.Smog" %>
+<%@ page import="com.yflab.model.Infrared" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta http-equiv="refresh" content=30;url=ControlCenter>
 <style type="text/css">
-<!--
+
 body,table{
  font-size:12px;
 }
@@ -32,6 +36,15 @@ h1,h2,h3{
   .title th, .title td { border: 1px solid #CAD9EA; padding: 5px; }
  
 //样式一
+
+div#floatparts
+{
+  background-color:blue;
+  positon:fixed;
+  border: 1px dotted #000;
+}
+
+
 table.tab_css_1{
  border:1px solid #cad9ea;
  color:#666;
@@ -50,6 +63,7 @@ table.tab_css_1 tr.tr_css{
 }
  
 //样式二
+<!--
 table.tab_css_2{
  border:1px solid #9db3c5;
  color:#666;
@@ -98,9 +112,10 @@ table.tab_css_3 tr.tr_css{
 .hover{
    background-color: #53AB38;
    color: #fff;
+-->
 }
  
--->
+
 </style>
 <script type="text/javascript">
  function ApplyStyle(s){
@@ -135,6 +150,15 @@ table.tab_css_3 tr.tr_css{
    ArrayList<Humidity> humidArr=(ArrayList<Humidity>) request.getAttribute("humidArr");
    String tempChartStr=(String) request.getAttribute("tempChartStr");
    String humidChartStr=(String) request.getAttribute("humidChartStr");
+   String smogState=(String) request.getAttribute("smogState");
+   String infraredState=(String) request.getAttribute("infraredState");
+   
+   int lightState=Integer.parseInt((String) request.getAttribute("lightState"));
+   
+   int light1,light2;
+   light1=lightState%2;
+   lightState/=2;
+   light2=lightState%2;
   // int lightState=(String) request.getAttribute("lightState")
 %>
 
@@ -186,39 +210,45 @@ table.tab_css_3 tr.tr_css{
      </tr>
      <%} %>
     </table>
-    
-     <p>
-	   <form>
+   
+   <div id="floatparts">
+     <hr>
+     <%
+       if (smogState.equals("1"))
+         out.println("<h2 style=\"color:#FF0000\">烟雾浓度超标</h3>");
+       else
+         out.println("<h3>烟雾浓度正常</h3>");
+       
+        if (infraredState.equals("1"))
+         out.println("<h2 style=\"color:#FF0000\">红外线检测到入侵</h3>");
+       else
+         out.println("<h3>红外线正常</h3>");  
+      %>
+     <hr>
+     
+     <h2>灯光情况</h2>
+	   <form method="post" action="OnLightChange">
 	   <table>
 	     <tr>
             <td>
                <h3>灯光1</h3>
-               <input type="radio" name="switch1" value="close1"/>关<br />
-               <input type="radio" name="switch1" value="open1" />开<br />
+               <input type="radio" name="switch1" value="open" <%if (light1==1) out.print("checked=\'checked\'"); %>/>开<br />
+               <input type="radio" name="switch1" value="close"  <%if (light1==0) out.print("checked=\'checked\'"); %>/>关<br />
 			</td>
 			<td>
                <h3>灯光2</h3>
-	           <input type="radio" name="switch2" value="close2" />关<br />
-               <input type="radio" name="switch2" value="open2" />开<br />
+	           <input type="radio" name="switch2" value="open" <%if (light1==1) out.print("checked=\'checked\'"); %>/>开<br />
+               <input type="radio" name="switch2" value="close"  <%if (light1==0) out.print("checked=\'checked\'"); %>/>关<br />
 			</td>
-			<td>
-                <h3>灯光3</h3>
-	           <input type="radio" name="switch3" value="close3" />关<br />
-               <input type="radio" name="switch3" value="open3" />开<br />
-			</td>
-			<td>
-                <h3>灯光4</h3>
-	           <input type="radio" name="switch4" value="close4" />关<br />
-               <input type="radio" name="switch4" value="open4" />开<br />
-			</td>
+			
 		 <tr>
 		 <tr>
 		     <td><input type="submit" value="设置灯光"/></td>
 		 </tr>
 	   </table>
 	   </form>
-	</p>
-
+	
+  </div>
 
   </center>
 </body>
