@@ -172,11 +172,12 @@ void sendLightState()
 	cmdtoSend[1] = !lightState1;
 	cmdtoSend[2] = !lightState2;
 
+	cout << cmdtoSend [1]<< cmdtoSend[2]<<endl;
 
 }
 
 
-void sendData(int junction, int lightState_1, int lightState_2, int temperature, int humidity)
+void sendData(int junction, int lightState_1, int lightState_2, int temperature, int humidity,int smog,int infrared)
 {
 	
 	//cout << "in" << endl;
@@ -191,13 +192,15 @@ void sendData(int junction, int lightState_1, int lightState_2, int temperature,
 
 		srand(time(NULL));
 
-		sprintf(destUrl, "http://grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d&rnd=%d",
+		sprintf(destUrl, "http://grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d&infrared=%d&smog=%d&rnd=%d",
 			junction,
 			lightState_1,
 			lightState_2,
 			temperature,
 			humidity,
-			rand() * 1000);
+			infrared,
+			smog,
+			rand() * 10000);
 
 		TCHAR tdestUrl[255];
 		MultiByteToWideChar(CP_ACP, 0, destUrl, -1, tdestUrl, 255);
@@ -342,7 +345,7 @@ int main(int argc, char **argv)
 	int addLen = sizeof(clientadd);
 
 	SOCKET cli;
-	char Rbuf[6];
+	char Rbuf[7];
 	memset(Rbuf, 0, sizeof(Rbuf));
 	int nRecv;
 	cli = accept(s, (sockaddr*)&clientadd, &addLen);
@@ -378,19 +381,21 @@ int main(int argc, char **argv)
 		}
 		else
 		{
-			int junction = Rbuf[1];
-			int lightState_1 = Rbuf[2];
-			int lightState_2 = Rbuf[3];
-			int temperature = Rbuf[4];
-			int humidity = Rbuf[5];
+			int junction = Rbuf[0];
+			int lightState_1 = Rbuf[1];
+			int lightState_2 = Rbuf[2];
+			int temperature = Rbuf[3];
+			int humidity = Rbuf[4];
+			int smog = Rbuf[5];
+			int infrared = Rbuf[6];
 
 			//cout << junction << "," << lightState_1 << "," << temperature << "," << humidity << endl;
 			if (junction==1)
-			  sendData(junction, !lightState_1,!lightState_2, temperature, humidity);
+			  sendData(junction, !lightState_1,!lightState_2, temperature, humidity,smog,infrared);
 		}
 
 		
-		send(cli,(char*) cmdtoSend,sizeof(cmdtoSend),0);
+     	send(cli,(char*) cmdtoSend,sizeof(cmdtoSend),0);
 
 		/*
 		if (isend==SOCKET_ERROR)

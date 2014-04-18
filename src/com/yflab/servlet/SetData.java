@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.yflab.util.HumidityDAO;
+import com.yflab.util.InfraredDAO;
 import com.yflab.util.LightDAO;
 import com.yflab.util.OperateListDAO;
+import com.yflab.util.SmogDAO;
 import com.yflab.util.TemperatureDAO;
 
 public class SetData extends HttpServlet {
@@ -113,10 +115,14 @@ public class SetData extends HttpServlet {
 			   
 			   int humidity=Integer.parseInt((String) request.getParameter("humidity"));
 			   int temperature=Integer.parseInt((String) request.getParameter("temperature"));
+			   int infraredState=Integer.parseInt((String) request.getParameter("infrared"));
+			   int smogState=Integer.parseInt((String) request.getParameter("smog"));
 			   
 			   new TemperatureDAO().setLatestTemperature(junction,temperature);
 			   new HumidityDAO().setLatestHumidity(junction,humidity);
 			   new LightDAO().setLightState(lightState);
+			   new InfraredDAO().setInfraredState(infraredState);
+			   new SmogDAO().setSmogState(smogState);
 			   
 			   ret="Set Sensor Data OK";
 			}

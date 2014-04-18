@@ -4,6 +4,24 @@ public class MyEnvironment {
 	
 	private Temperature temperature;
 	private Humidity humidity;
+	private Infrared infrared;
+	private Smog smog;
+	
+	public Infrared getInfrared() {
+		return infrared;
+	}
+
+	public void setInfrared(Infrared infrared) {
+		this.infrared = infrared;
+	}
+
+	public Smog getSmog() {
+		return smog;
+	}
+
+	public void setSmog(Smog smog) {
+		this.smog = smog;
+	}
 
 	public MyEnvironment() {
 		// TODO Auto-generated constructor stub
