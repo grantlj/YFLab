@@ -6,7 +6,16 @@ public class MyEnvironment {
 	private Humidity humidity;
 	private Infrared infrared;
 	private Smog smog;
+	private Energy energy;
 	
+	public Energy getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(Energy energy) {
+		this.energy = energy;
+	}
+
 	public Infrared getInfrared() {
 		return infrared;
 	}

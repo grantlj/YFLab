@@ -14,6 +14,7 @@ public class MyEnvironmentDAO {
 	  myEnvironment.setTemperature(new TemperatureDAO().GetLatestTemperature());
 	  myEnvironment.setSmog(new SmogDAO().getSmogState());
 	  myEnvironment.setInfrared(new InfraredDAO().getInfraredState());
+	  myEnvironment.setEnergy(new EnergyDAO().getEnergyState());
 	  return myEnvironment;
   }
   
