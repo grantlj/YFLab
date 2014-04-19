@@ -123,7 +123,8 @@ using namespace std;
 #pragma comment(lib,"shell32.lib")
 
 
-int cmdtoSend[3];
+unsigned char cmdtoSend[2];
+
 void sendLightState()
 {
 	char* destUrl = new char[255];
@@ -168,11 +169,11 @@ void sendLightState()
 
 	
 	
-	cmdtoSend[0] = 1;
-	cmdtoSend[1] = !lightState1;
-	cmdtoSend[2] = !lightState2;
+	cmdtoSend[0] = 2;
+	cmdtoSend[1] = lightState1;
+	//cmdtoSend[2] = lightState2;
 
-	cout << cmdtoSend [1]<< cmdtoSend[2]<<endl;
+	cout << cmdtoSend [0]<<" "<<cmdtoSend[1]<<endl;
 
 }
 
@@ -184,9 +185,8 @@ void sendData(int junction, int lightState_1, int lightState_2, int temperature,
 	//CString destUrl;
 	//destUrl.Format((wchar_t)("grantlj.gicp.net:8080/YFLab/SetData?reqType=sensorData&junction=%d&light1=%d&light2=%d&temperature=%d&humidity=%d"), junction, lightState_1, lightState_2, temperature, humidity);
 
-	cout << junction <<" "<< lightState_1<<" "<< lightState_2<<" " << temperature<<" " << humidity <<" "<<infrared<<" "<<smog<<" "<<power_h<<" "<<power_l<<" "<<total<<"!!!" << endl;
-	if (temperature + humidity != 0)
-	{
+	cout << junction <<" "<< lightState_1<<" "<< lightState_2<<" " << temperature<<" " << humidity <<" "<<smog<<" "<<infrared<<" "<<power_h<<" "<<power_l<<" "<<total<<"   !!!" << endl;
+	
 
 		char* destUrl = new char[255];
 
@@ -198,12 +198,12 @@ void sendData(int junction, int lightState_1, int lightState_2, int temperature,
 			lightState_2,
 			temperature,
 			humidity,
-			infrared,
 			smog,
+			infrared,
 			power_h,
 			power_l,
 			total,
-			rand() * 1000);
+			rand() * 10000);
 
 		TCHAR tdestUrl[255];
 		MultiByteToWideChar(CP_ACP, 0, destUrl, -1, tdestUrl, 255);
@@ -249,7 +249,7 @@ void sendData(int junction, int lightState_1, int lightState_2, int temperature,
 		}
 
 		sendLightState();
-	}
+	
 
 
 
@@ -264,6 +264,16 @@ int main(int argc, char **argv)
 	app.InitApplication();
 	AfxWinInit(::GetModuleHandle(NULL), NULL, ::GetCommandLine(), 0);
 	
+	/*
+	int i = 0;
+	do
+	{
+		i++;
+		//sendData(junction, !lightState_1,!lightState_2, temperature, humidity,smog,infrared,power_h,power_l,total);
+		sendData(1, 1, 1, 25-i,34+i , 0, 1, 1, 10, 35);
+		Sleep(1000);
+	} while (true);
+	*/
 	//===========================================================
 	//===========================================================
 	//Load Necessary Library;
@@ -349,6 +359,7 @@ int main(int argc, char **argv)
 
 	SOCKET cli;
 	char Rbuf[10];
+	
 	memset(Rbuf, 0, sizeof(Rbuf));
 	int nRecv;
 	cli = accept(s, (sockaddr*)&clientadd, &addLen);
@@ -370,6 +381,7 @@ int main(int argc, char **argv)
 			ntohs(clientadd.sin_port) << endl;
 
 		nRecv = recv(cli, Rbuf, sizeof(Rbuf), 0);
+		
 
 		//cout << Rbuf << "!!!" << endl;
 
@@ -396,8 +408,10 @@ int main(int argc, char **argv)
 			int total = Rbuf[9];
 
 			//cout << junction << "," << lightState_1 << "," << temperature << "," << humidity << endl;
-			if (junction==1)
-			  sendData(junction, !lightState_1,!lightState_2, temperature, humidity,smog,infrared,power_h,power_l,total);
+			if (junction == 1)
+				sendData(junction, lightState_1, lightState_2, temperature, humidity, smog, infrared, power_h, power_l, total);
+			else
+				cout << "junction:"<<junction << endl;
 		}
 
 		
@@ -406,7 +420,7 @@ int main(int argc, char **argv)
 		/*
 		if (isend==SOCKET_ERROR)
 		{
-		printf("Send Message to Client failed...\n");
+		printf("Send Message to Client failed...\n 
 		printf("Error Code:%d\n",WSAGetLastError());
 		continue;
 		}

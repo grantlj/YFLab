@@ -18,7 +18,8 @@ import com.yflab.util.SmogDAO;
 import com.yflab.util.TemperatureDAO;
 
 public class SetData extends HttpServlet {
-
+    
+	 private static int lightViewCount=0;
 	/**
 	 * 
 	 */
@@ -67,6 +68,14 @@ public class SetData extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		boolean doFlag=false;
+		lightViewCount++;
+		if (lightViewCount==10)
+		{
+			doFlag=true;
+			lightViewCount=0;
+		}
+		
 		@SuppressWarnings("deprecation")
 		String path=request.getRealPath("index.jsp");
 	    path=path.substring(0,path.lastIndexOf('\\'))+"\\view\\images\\generated"; 
@@ -125,7 +134,8 @@ public class SetData extends HttpServlet {
 			   
 			   new TemperatureDAO().setLatestTemperature(junction,temperature);
 			   new HumidityDAO().setLatestHumidity(junction,humidity);
-			   new LightDAO().setLightState(lightState);
+			   if (doFlag)
+			     new LightDAO().setLightState(lightState);
 			   new InfraredDAO().setInfraredState(infraredState);
 			   new SmogDAO().setSmogState(smogState);
 			   new EnergyDAO().setEnergyState(power_hi, power_lo, total);
