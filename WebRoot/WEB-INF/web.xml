@@ -27,6 +27,9 @@
   </servlet>
 
 
+<listener>
+  <listener-class>com.yflab.servlet.MailSenderListener</listener-class>
+</listener>
 
 
   <servlet-mapping>
