@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.yflab.model.Light;
 import com.yflab.model.MyEnvironment;
 import com.yflab.model.Humidity;
+import com.yflab.model.Remote;
 import com.yflab.model.Temperature;
 import com.yflab.util.LightDAO;
 import com.yflab.util.MyEnvironmentDAO;
 import com.yflab.util.HumidityDAO;
 import com.yflab.util.OperateListDAO;
+import com.yflab.util.RemoteDAO;
 import com.yflab.util.TemperatureDAO;
 
 import com.alibaba.fastjson.*;
@@ -207,6 +209,19 @@ public class GetData extends HttpServlet {
 	    	}
 	    }
 	    
+	    if (reqType.equals("remoteState"))
+	    {
+	    	Remote remote=null;
+	    	try
+	    	{
+	    		remote=new RemoteDAO().getRemoteState();
+	    		ret=getJsonStr(remote);
+	    	}
+	    	catch (Exception e)
+	    	{
+	    		e.printStackTrace();
+	    	}
+	    }
 	if (ret!=null)
 		pw.println(ret);
 	else

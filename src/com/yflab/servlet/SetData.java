@@ -14,6 +14,7 @@ import com.yflab.util.HumidityDAO;
 import com.yflab.util.InfraredDAO;
 import com.yflab.util.LightDAO;
 import com.yflab.util.OperateListDAO;
+import com.yflab.util.RemoteDAO;
 import com.yflab.util.SmogDAO;
 import com.yflab.util.TemperatureDAO;
 
@@ -112,7 +113,7 @@ public class SetData extends HttpServlet {
 		{
 			
 			/*
-			 * http://localhost:8080/YFLab/SetData?reqType=sensorData&junction=1&light1=1&light2=0&humidity=35&temperature=40
+			 * http://localhost:8080/YFLab/SetData?reqType=sensorData&junction=1&light1=1&light2=0&humidity=35&temperature=40&remote=0
 			 */
 			try
 			{
@@ -132,10 +133,15 @@ public class SetData extends HttpServlet {
 			   int power_lo=Integer.parseInt((String) request.getParameter("power_lo"));
 			   int total=Integer.parseInt((String) request.getParameter("total"));
 			   
+			   int remote=Integer.parseInt((String) request.getParameter("remote"));
+			   
 			   new TemperatureDAO().setLatestTemperature(junction,temperature);
 			   new HumidityDAO().setLatestHumidity(junction,humidity);
 			   if (doFlag)
 			     new LightDAO().setLightState(lightState);
+			   
+			   new RemoteDAO().setRemoteState(remote);
+			   
 			   new InfraredDAO().setInfraredState(infraredState);
 			   new SmogDAO().setSmogState(smogState);
 			   new EnergyDAO().setEnergyState(power_hi, power_lo, total);
