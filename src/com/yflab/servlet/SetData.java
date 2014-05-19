@@ -109,6 +109,24 @@ public class SetData extends HttpServlet {
 			}
 		}
 		
+		if (reqType.equals("remoteState"))
+		{
+			String arg0=(String) request.getParameter("arg0");
+			int keyValue=0;
+			try
+			{
+				keyValue=Integer.parseInt(arg0);
+				if (new RemoteDAO().setRemoteState(keyValue))
+				  ret="Set keyValue OK";
+				  else
+					ret="ERR";
+			}
+			catch (Exception e)
+			{
+				ret="ERR";
+			}
+			
+		}
 		if (reqType.equals("sensorData"))
 		{
 			
