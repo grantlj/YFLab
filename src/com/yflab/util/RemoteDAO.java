@@ -64,6 +64,7 @@ public class RemoteDAO {
 		 
 		 try
 		 {
+			// System.out.println("key value="+keyValue);
 			 connection=db.getConnection();
 			 statement=connection.createStatement();
 			 

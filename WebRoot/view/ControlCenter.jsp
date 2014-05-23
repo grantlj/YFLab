@@ -249,7 +249,32 @@ table.tab_css_3 tr.tr_css{
 	   </form>
 	
   </div>
-
+  
+   <hr>
+    
+      <h2>遥控器</h2>
+      <form method="post" action="OnKeyDown">
+      <table>
+        <tr>
+          <td><input type="radio" name="keyboard" id="key1" value="1"/>key1</td><td><input type="radio" name="keyboard" id="key2" value="2"/>key2</td><td><input type="radio" name="keyboard" id="key3" value="3"/>key3</td>
+        </tr>
+        
+         <tr>
+            <td><input type="radio" name="keyboard" id="key4" value="4"/>key4</td><td><input type="radio" name="keyboard" id="key5" value="5"/>key5</td><td><input type="radio" name="keyboard" id="key6" value="6"/>key6</td>
+        </tr>
+        
+         <tr>
+            <td><input type="radio" name="keyboard" id="key7" value="7"/>key7</td><td><input type="radio" name="keyboard" id="key8" value="8"/>key8</td><td><input type="radio" name="keyboard" id="key9" value="9"/>key9</td>
+        </tr>
+        
+         <tr>
+            <td><input type="radio" name="keyboard" id="key10" value="10"/>key10</td><td><input type="radio" name="keyboard" id="key11" value="11"/>key11</td><td><input type="radio" name="keyboard" id="key12" value="12"/>key12</td>
+        </tr>
+      </table> 
+         <tr>
+            <td><input type="submit" value="调用按键"/></td>
+         </tr>
+      </form>
   </center>
 </body>
 </html>
