@@ -10,6 +10,7 @@ import com.yflab.model.Light;
 
 public class LightDAO {
 	 private final static String tableName="light";
+	 private static boolean doing=false;
 	 
 	 public  Light getLightState() throws SQLException
 	 {
@@ -63,8 +64,16 @@ public class LightDAO {
 		 return ret;
 	 }
 	 
-	 public boolean setLightState(int lightState) throws SQLException
+	 public boolean setLightState(int lightState) throws SQLException, InterruptedException
 	 {
+		 
+	     while (doing)
+	     {
+	    	Thread.sleep(50); 
+	    
+	     }
+	     
+		 doing=true;
 		 boolean ret=false;
 		 int[] lightMap=new int[100];
 		 
@@ -106,7 +115,11 @@ public class LightDAO {
 			 if (statement!=null) statement.close();
 			 if (connection!=null) connection.close();
 		 }
+		 doing=false;
 		return ret;
+	   
+	  
+		   
 		 
 	 }
 }

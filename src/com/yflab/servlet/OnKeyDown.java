@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.yflab.util.LightDAO;
 import com.yflab.util.RemoteDAO;
 
 public class OnKeyDown extends HttpServlet {
@@ -67,8 +66,12 @@ public class OnKeyDown extends HttpServlet {
 		 try
 		 {
 		  int keyCode=Integer.parseInt((String) request.getParameter("keyboard"));
-		  new RemoteDAO().setRemoteState(keyCode);
-		  response.sendRedirect("ControlCenter");
+		  for (int i=0;i<3;i++)
+		  {
+			  new RemoteDAO().setRemoteState(keyCode);
+			  Thread.sleep(800);
+		  }
+			  response.sendRedirect("ControlCenter");
 		 }
 		 
 		 catch (Exception e)

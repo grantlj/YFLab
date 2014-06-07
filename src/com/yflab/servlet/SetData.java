@@ -70,12 +70,15 @@ public class SetData extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		boolean doFlag=false;
+		
+		/*
 		lightViewCount++;
 		if (lightViewCount==10)
 		{
 			doFlag=true;
 			lightViewCount=0;
 		}
+		*/
 		
 		@SuppressWarnings("deprecation")
 		String path=request.getRealPath("index.jsp");
@@ -98,10 +101,18 @@ public class SetData extends HttpServlet {
 			{
 			  lightState=Integer.parseInt(arg0);
 			  if (lightState!=-1)
-				  if (new LightDAO().setLightState(lightState))
+			  {
+				  boolean bool=false;
+			      for (int i=0;i<3;i++)
+			      { 
+			    	  bool=(bool) || (new LightDAO().setLightState(lightState));
+			    	  Thread.sleep(800);
+			      }
+				  if (bool)
 			        ret="Set lightState OK";
 				  else 
 					ret="ERR";
+			  }
 			}
 			catch (Exception e)
 			{
@@ -111,12 +122,19 @@ public class SetData extends HttpServlet {
 		
 		if (reqType.equals("remoteState"))
 		{
+		
 			String arg0=(String) request.getParameter("arg0");
 			int keyValue=0;
 			try
 			{
 				keyValue=Integer.parseInt(arg0);
-				if (new RemoteDAO().setRemoteState(keyValue))
+				boolean bool=false;
+				for (int i=0;i<3;i++)
+				{
+					Thread.sleep(800);
+					bool=(bool) || (new RemoteDAO().setRemoteState(keyValue));
+				}
+				if (bool)
 				  ret="Set keyValue OK";
 				  else
 					ret="ERR";
@@ -129,8 +147,13 @@ public class SetData extends HttpServlet {
 		}
 		if (reqType.equals("sensorData"))
 		{
-			
-			/*
+			lightViewCount++;
+			if (lightViewCount==10)
+			{
+				doFlag=true;
+				lightViewCount=0;
+			}
+			/* For sensor send...
 			 * http://localhost:8080/YFLab/SetData?reqType=sensorData&junction=1&light1=1&light2=0&humidity=35&temperature=40&remote=0
 			 */
 			try
@@ -156,10 +179,11 @@ public class SetData extends HttpServlet {
 			   new TemperatureDAO().setLatestTemperature(junction,temperature);
 			   new HumidityDAO().setLatestHumidity(junction,humidity);
 			   if (doFlag)
+			   {
 			     new LightDAO().setLightState(lightState);
 			   
-			   new RemoteDAO().setRemoteState(remote);
-			   
+			     new RemoteDAO().setRemoteState(remote);
+			   }
 			   new InfraredDAO().setInfraredState(infraredState);
 			   new SmogDAO().setSmogState(smogState);
 			   new EnergyDAO().setEnergyState(power_hi, power_lo, total);

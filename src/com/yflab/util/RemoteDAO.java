@@ -10,6 +10,7 @@ import com.yflab.model.Remote;
 
 public class RemoteDAO {
 	 private final static String tableName="remote";
+	 private static boolean doing=false;
 	 
 	 public Remote getRemoteState() throws SQLException
 	 {
@@ -54,8 +55,15 @@ public class RemoteDAO {
 		 
 	 }
 	 
-	 public boolean setRemoteState(int keyValue) throws SQLException
+	 public boolean setRemoteState(int keyValue) throws SQLException, InterruptedException
 	 {
+		 while (doing)
+		 {
+			 Thread.sleep(50); 
+			 
+		 };
+		 
+		 doing=true;
 		 boolean ret=false;
 		 
 		 DbConnector db = new DbConnector();
@@ -84,7 +92,7 @@ public class RemoteDAO {
 				 if (statement!=null) statement.close();
 				 if (connection!=null) connection.close();
 			 }
-		 
+		 doing=false;
 		 return ret;
 	 }
 }

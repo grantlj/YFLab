@@ -16,7 +16,7 @@ public class MailSender {
 	  mailInfo.setUserName("axeaux@126.com"); 
 	  mailInfo.setPassword("nsfz123456");//您的邮箱密码 
 	  mailInfo.setFromAddress("axeaux@126.com"); 
-	  mailInfo.setToAddress("axeaux@126.com"); 
+	  mailInfo.setToAddress("347652751@qq.com"); 
 	  mailInfo.setSubject("您的最新电能使用情况已出");
 	  String contentStr="截止 ";
 	  contentStr=contentStr+new Date().toString();
