@@ -66,10 +66,13 @@ public class OnKeyDown extends HttpServlet {
 		 try
 		 {
 		  int keyCode=Integer.parseInt((String) request.getParameter("keyboard"));
+		  boolean bool=false;
 		  for (int i=0;i<3;i++)
 		  {
-			  new RemoteDAO().setRemoteState(keyCode);
-			  Thread.sleep(800);
+			  bool=(bool) || (new RemoteDAO().setRemoteState(keyCode));
+			  Thread.sleep(700);
+			  if (bool)
+					break;
 		  }
 			  response.sendRedirect("ControlCenter");
 		 }

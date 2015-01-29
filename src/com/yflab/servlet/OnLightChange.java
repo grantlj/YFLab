@@ -74,11 +74,16 @@ public class OnLightChange extends HttpServlet {
 		  light2=1;
 	  
 	  int lightState=light1*1+light2*2;
+	  boolean bool=false;
+	  
 	  for (int i=0;i<3;i++)
 	  {
-	      new LightDAO().setLightState(lightState);
-	      Thread.sleep(800);
+	     bool=(bool)|| (new LightDAO().setLightState(lightState));
+	      Thread.sleep(900);
+	      if (bool)
+				break;
 	  }
+	  
 	  
 	  response.sendRedirect("ControlCenter");
 	 }

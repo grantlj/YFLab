@@ -106,7 +106,9 @@ public class SetData extends HttpServlet {
 			      for (int i=0;i<3;i++)
 			      { 
 			    	  bool=(bool) || (new LightDAO().setLightState(lightState));
-			    	  Thread.sleep(800);
+			    	  Thread.sleep(700);
+			    	  if (bool)
+							break;
 			      }
 				  if (bool)
 			        ret="Set lightState OK";
@@ -131,8 +133,10 @@ public class SetData extends HttpServlet {
 				boolean bool=false;
 				for (int i=0;i<3;i++)
 				{
-					Thread.sleep(800);
+					Thread.sleep(700);
 					bool=(bool) || (new RemoteDAO().setRemoteState(keyValue));
+					if (bool)
+						break;
 				}
 				if (bool)
 				  ret="Set keyValue OK";

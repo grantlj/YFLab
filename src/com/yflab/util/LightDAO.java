@@ -69,7 +69,7 @@ public class LightDAO {
 		 
 	     while (doing)
 	     {
-	    	Thread.sleep(50); 
+	    	Thread.sleep(10); 
 	    
 	     }
 	     
