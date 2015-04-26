@@ -285,5 +285,5 @@ public  void setLatestTemperature(int junction, int temperature) throws SQLExcep
 }    
    
 
-
+ 
 }
